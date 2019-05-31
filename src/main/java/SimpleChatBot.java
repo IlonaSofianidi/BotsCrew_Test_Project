@@ -11,6 +11,7 @@ public class SimpleChatBot {
     public static void main(String[] args) {
         SimpleChatBot simpleChatBot = new SimpleChatBot();
         simpleChatBot.start();
+
     }
 
     public void start() {
@@ -42,6 +43,11 @@ public class SimpleChatBot {
                 DepartmentResponse employees = DepartmentResponse.getEmployeesCountForDepartment(departmentName.trim());
                 log.info(employees.getSpeechText());
             }
+            else if(request.contains("5")){
+                String departmentName = MessageUtils.extractDepartmentName(request);
+                DepartmentResponse employees = DepartmentResponse.getLectorsByTemplate(departmentName.trim());
+                log.info(employees.getSpeechText());
+            }
             else if (request.equalsIgnoreCase("/help")) {
                 DepartmentResponse helpResponse = DepartmentResponse.getHelpResponse();
                 log.info(helpResponse.getSpeechText());
@@ -49,7 +55,9 @@ public class SimpleChatBot {
            else if (request.equalsIgnoreCase("/bye")) {
                 botIsActive = false;
                 log.info("Bye! Have fun.");
-            }else {
+            }
+
+           else {
                 log.info("I'm sorry.I can not get it. Write /help to see the list of available commands...");
             }
         }
