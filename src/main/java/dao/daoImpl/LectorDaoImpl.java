@@ -4,7 +4,6 @@ import dao.LectorDao;
 import entity.Department;
 import entity.Lector;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import utils.HibernateUtils;
 
@@ -76,6 +75,14 @@ public class LectorDaoImpl implements LectorDao {
         query.setParameter("id", lectorId);
         List<Department> list = query.getResultList();
         return list;
+    }
+
+    @Override
+    public List<Lector> getLectorsByGlobalSearch(String template) {
+        Query query = getCurrentSession().createQuery
+                ("SELECT L FROM Lector L WHERE L.name LIKE :name");
+        query.setParameter("name", "%" + template+ "%");
+        return query.getResultList();
     }
 }
 
