@@ -1,6 +1,8 @@
 package common;
 
 import dao.daoImpl.DepartmentDaoImpl;
+import dao.daoImpl.LectorDaoImpl;
+import entity.Lector;
 import lombok.Getter;
 
 import java.util.List;
@@ -9,9 +11,10 @@ import java.util.Optional;
 @Getter
 public class DepartmentResponse {
     private String speechText;
-    private static final String[] helpCommands = {"/help", "1.Who is head of department {department_name}",
-            "2.Show {department_name} statistic", "3.Show the average salary for {department_name}",
-            "4.Show count of employees for {department_name}", "/bye"};
+    private static final String[] helpCommands = {"/help", "1 Who is head of department {department_name}",
+            "2 Show {department_name} statistic", "3 Show the average salary for {department_name}",
+            "4 Show count of employees for {department_name}",
+            "5 Show lectors by {template}", "/bye"};
 
     public DepartmentResponse(String speechText) {
         this.speechText = speechText;
@@ -117,6 +120,26 @@ public class DepartmentResponse {
             builder.append(msg);
         }
         return new DepartmentResponse(builder.toString());
+    }
 
+    public static DepartmentResponse getLectorsByTemplate(String template) {
+        LectorDaoImpl lectorDao = new LectorDaoImpl();
+        lectorDao.openSessionTransaction();
+        List<Lector> lectorsByGlobalSearch = lectorDao.getLectorsByGlobalSearch(template);
+        lectorDao.getCurrentSession().close();
+        StringBuilder builder = new StringBuilder();
+        if (!lectorsByGlobalSearch.isEmpty()) {
+            for (Lector l : lectorsByGlobalSearch) {
+                String msg = String
+                        .format("Lectors found by your template {%s} %n ", template);
+                builder.append(msg);
+                builder.append(l.toString()).append("\r\n");
+            }
+        } else {
+            String msg = String
+                    .format("Nothing found by your template {%s) %n ", template);
+            builder.append(msg);
+        }
+        return new DepartmentResponse(builder.toString());
     }
 }
