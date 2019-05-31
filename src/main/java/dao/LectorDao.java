@@ -22,4 +22,6 @@ public interface LectorDao {
     void addLectorToDepartment(Lector lector,Department department);
 
     List<Department> getAllDepartmentsByLectorId(int  lectorId);
+
+    List<Lector> getLectorsByGlobalSearch(String template);
 }
